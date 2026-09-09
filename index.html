@@ -14,6 +14,8 @@ body{margin:0;background:var(--bg);color:var(--ink);line-height:1.65;
 h1{font-size:30px;font-weight:600;margin:0 0 4px;letter-spacing:.02em}
 .sub{color:var(--dim);font-size:15px;margin:0 0 40px;padding-bottom:28px;border-bottom:1.5px solid var(--line)}
 h2{font-size:19px;font-weight:600;margin:0 0 6px}
+.game{padding:0 0 26px;margin-bottom:26px;border-bottom:1.5px solid var(--line)}
+.game:last-of-type{border-bottom:0;margin-bottom:0;padding-bottom:6px}
 .tag{color:var(--me);font-size:14px;margin:0 0 10px}
 p{margin:0 0 14px;color:var(--dim)}
 p.ink{color:var(--ink)}
@@ -26,11 +28,21 @@ footer{margin-top:52px;padding-top:22px;border-top:1.5px solid var(--line);color
   <h1>Six Strokes Studio</h1>
   <p class="sub">Small, hand-made games.</p>
 
-  <h2>Outpost Zero</h2>
-  <p class="tag">Hold the line. Mine the belt.</p>
-  <p>Your outpost sits alone in the asteroid belt, and the raiders know it. Defend the
-  base, fly out for loot between waves, and build a cannon they can't crack.</p>
-  <p class="ink"><a href="/outpost-zero-privacy/">Privacy policy</a></p>
+  <div class="game">
+    <h2>Outpost Zero</h2>
+    <p class="tag">Hold the line. Mine the belt.</p>
+    <p>Your outpost sits alone in the asteroid belt, and the raiders know it. Defend the
+    base, fly out for loot between waves, and build a cannon they can't crack.</p>
+    <p class="ink"><a href="/outpost-zero-privacy/">Privacy policy</a></p>
+  </div>
+
+  <div class="game">
+    <h2>Dead Field</h2>
+    <p class="tag">Gather. Arm up. Outlast.</p>
+    <p>An empty field, a handful of cells on the ground, and something coming over the
+    horizon. Ten weapons, five hero upgrades, and packs that never stop growing.</p>
+    <p class="ink"><a href="/dead-field-privacy/">Privacy policy</a></p>
+  </div>
 
   <footer>
     Six Strokes Studio &middot; Andrii Honcharuk<br>

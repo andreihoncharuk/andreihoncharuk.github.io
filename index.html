@@ -18,6 +18,12 @@ h2{font-size:19px;font-weight:600;margin:0 0 6px}
       padding:0 0 26px;margin-bottom:26px;border-bottom:1.5px solid var(--line)}
 .game:last-of-type{border-bottom:0;margin-bottom:0;padding-bottom:6px}
 .game .body{min-width:0}
+.links{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;margin:0}
+.play{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;
+      border:1.5px solid var(--line);border-radius:9px;color:var(--ink);
+      font-size:14px;font-weight:600;text-decoration:none}
+.play:hover,.play:focus-visible{border-color:var(--me);color:var(--me);text-decoration:none}
+.play svg{width:14px;height:15px;flex:none}
 /* avatar, or a studio-mark stub for games with no art yet */
 .avatar{width:76px;height:76px;flex:none;border-radius:16px;object-fit:cover;
         background:#8b95a6;display:block}
@@ -44,7 +50,7 @@ footer{margin-top:52px;padding-top:22px;border-top:1.5px solid var(--line);color
     <p class="tag">Hold the line. Mine the belt.</p>
     <p>Your outpost sits alone in the asteroid belt, and the raiders know it. Defend the
     base, fly out for loot between waves, and build a cannon they can't crack.</p>
-    <p class="ink"><a href="/outpost-zero-privacy/">Privacy policy</a></p>
+    <p class="ink links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.outpostzero"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a href="/outpost-zero-privacy/">Privacy policy</a></p>
     </div>
   </div>
 
@@ -55,7 +61,7 @@ footer{margin-top:52px;padding-top:22px;border-top:1.5px solid var(--line);color
     <p class="tag">Gather. Arm up. Outlast.</p>
     <p>An empty field, a handful of cells on the ground, and something coming over the
     horizon. Ten weapons, five hero upgrades, and packs that never stop growing.</p>
-    <p class="ink"><a href="/dead-field-privacy/">Privacy policy</a></p>
+    <p class="ink links"><a href="/dead-field-privacy/">Privacy policy</a></p>
     </div>
   </div>
 

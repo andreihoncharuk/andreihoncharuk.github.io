@@ -24,6 +24,8 @@ h2{font-size:19px;font-weight:600;margin:0 0 6px}
       font-size:14px;font-weight:600;text-decoration:none}
 .play:hover,.play:focus-visible{border-color:var(--me);color:var(--me);text-decoration:none}
 .play svg{width:14px;height:15px;flex:none}
+/* not on Google Play yet: same button, greyed out and inert */
+.play.soon,.play.soon:hover{color:var(--dim);border-color:var(--line);opacity:.55;cursor:default}
 /* avatar, or a studio-mark stub for games with no art yet */
 .avatar{width:76px;height:76px;flex:none;border-radius:16px;object-fit:cover;
         background:#8b95a6;display:block}
@@ -50,7 +52,7 @@ footer{margin-top:52px;padding-top:22px;border-top:1.5px solid var(--line);color
     <p class="tag">Run. Jump. Dodge the drones.</p>
     <p>A brave little cat races across a pixel-art city. Jump the sofas and spikes, outsmart
     attack drones, charging cannons and laser bosses, and collect fish to unlock seven more cats.</p>
-    <p class="ink links"><span>Coming soon to Google Play</span><a href="/mr-akio-privacy/">Privacy policy</a></p>
+    <p class="ink links"><span class="play soon" aria-disabled="true" title="Coming soon to Google Play"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Coming soon</span><a href="/mr-akio-privacy/">Privacy policy</a></p>
     </div>
   </div>
 

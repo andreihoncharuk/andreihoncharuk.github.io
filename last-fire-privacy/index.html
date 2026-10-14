@@ -35,7 +35,7 @@ footer{margin-top:48px;padding-top:22px;border-top:1.5px solid var(--line);color
 <div class="wrap">
 <a class="back" href="/"><span>&larr;</span> Six Strokes Studio</a>
 <h1>Privacy policy — Last Fire</h1>
-<p class="meta">Last updated: 4 October 2026</p>
+<p class="meta">Last updated: 14 October 2026</p>
 
 <p>Last Fire (“the app”) is published by Six Strokes Studio (Andrii Honcharuk),
 <a href="mailto:sixstrokesstudio@gmail.com">sixstrokesstudio@gmail.com</a>. This policy
@@ -45,8 +45,9 @@ covers the Last Fire mobile app (Android package <code>com.sixstrokes.lastfire</
 <p>A few values are saved only on your device: your best wave, how many runs and deaths you have
 had, and your music and sound settings. A run in progress is not saved. The app has no account
 system and does not send any of this anywhere.</p>
-<p>Uninstalling the app removes this data. Because none of it ever leaves your device,
-we hold no copy of it and there is nothing on our side to export or delete.</p>
+<p>Uninstalling the app removes this data. Your game progress never leaves your device,
+so we hold no copy of it. The only data stored outside your device is the invite-code data
+described below.</p>
 
 <h2>Advertising</h2>
 <p>The app shows ads through Google AdMob, and never in the middle of a fight:</p>
@@ -69,8 +70,27 @@ Requests about that data should be directed to Google:</p>
 <li><a href="https://policies.google.com/technologies/partner-sites">How Google uses data from apps</a></li>
 </ul>
 
+<h2>Invite codes</h2>
+<p>From version 1.0.5, the app has an optional invite feature: each installation of the app gets its own
+code, and when a friend enters that code in their copy of the app, you both unlock the minigun. To make
+this work the app uses Google Firebase:</p>
+<ul>
+<li>Firebase Authentication creates an anonymous, random ID for this installation. It is not linked to
+your name, email, Google account or advertising identifier.</li>
+<li>Cloud Firestore stores your invite code together with that anonymous ID, and, when someone enters a
+code, a record of which anonymous ID entered which code. This is how the app knows that your code was
+used and that a code can be entered only once per installation.</li>
+<li>As with any internet connection, Google receives the device’s IP address when the app contacts
+Firebase.</li>
+</ul>
+<p>This data is used only for the invite feature. It is not used for advertising or sold to anyone.
+Google acts as our processor for it (<a href="https://firebase.google.com/support/privacy">Firebase
+privacy and security</a>). To have your invite data deleted, email us the invite code shown in the app.</p>
+
 <h2>Purchases</h2>
-<p>The app has no in-app purchases and never asks for payment details.</p>
+<p>The app offers one optional in-app purchase, the minigun, through Google Play Billing. Payment is handled
+entirely by Google Play: we never see your payment details. The app only receives Google Play’s
+confirmation that the item was bought, so it can unlock it and restore it after a reinstall.</p>
 
 <h2>Children</h2>
 <p>The app is not directed at children under 13 and does not knowingly collect data from
@@ -82,6 +102,7 @@ address below and we will act on it.</p>
 <li>Reset or delete the advertising identifier in your device settings.</li>
 <li>Withdraw or change ad-personalization consent at any time, as described above.</li>
 <li>Rewarded ads are always optional; the game can be played without watching any.</li>
+<li>The invite feature is optional: if you never open the invite window, enter a code or share yours, nothing beyond the anonymous ID and your unused code is stored.</li>
 <li>Uninstall the app to remove all locally stored game data.</li>
 </ul>
 

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Studio stats</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05070d;--card:#0c111c;--ink:#e6edf3;--dim:#8b96a8;--line:#28324a;--me:#6cf5c7;--warn:#ffb86b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Chakra Petch",system-ui,sans-serif;font-size:16px;line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding:32px 16px 64px}
+h1{font-size:26px;margin:0 0 4px}
+h2{font-size:16px;color:var(--me);margin:0 0 12px;letter-spacing:.03em;text-transform:uppercase}
+.meta{color:var(--dim);font-size:14px;margin-bottom:24px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:18px}
+.kpis{display:flex;gap:18px;flex-wrap:wrap}
+.kpi b{display:block;font-size:30px;font-weight:600;line-height:1.1}
+.kpi span{color:var(--dim);font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+td{padding:5px 0;border-bottom:1px solid var(--line)}
+td.n{text-align:right;color:var(--me);font-variant-numeric:tabular-nums}
+.bars{display:flex;align-items:flex-end;gap:4px;height:120px;margin-top:8px}
+.bar{flex:1;background:var(--me);border-radius:3px 3px 0 0;min-height:2px;position:relative}
+.bar:hover::after{content:attr(data-t);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);background:#000;color:#fff;font-size:12px;padding:2px 6px;border-radius:4px;white-space:nowrap}
+.axis{display:flex;justify-content:space-between;color:var(--dim);font-size:12px;margin-top:4px}
+button{font:inherit;background:var(--me);color:#05070d;border:0;border-radius:10px;padding:10px 18px;font-weight:600;cursor:pointer}
+button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);padding:6px 12px;font-size:13px}
+.note{color:var(--dim);font-size:13px;margin-top:10px}
+.err{color:var(--warn)}
+#app[hidden],#gate[hidden]{display:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Six Strokes Studio · stats</h1>
+  <div class="meta" id="meta">Private page.</div>
+
+  <div id="gate" class="card">
+    <p>Sign in with the studio's Google account to see the numbers.</p>
+    <button id="signin">Sign in with Google</button>
+    <p class="note err" id="gateErr"></p>
+  </div>
+
+  <div id="app" hidden>
+    <div class="grid">
+      <div class="card">
+        <h2>Website visits</h2>
+        <div class="kpis">
+          <div class="kpi"><b id="vToday">–</b><span>today</span></div>
+          <div class="kpi"><b id="v7">–</b><span>last 7 days</span></div>
+          <div class="kpi"><b id="v30">–</b><span>last 30 days</span></div>
+          <div class="kpi"><b id="vAll">–</b><span>all time</span></div>
+        </div>
+        <div class="bars" id="bars"></div>
+        <div class="axis"><span id="axFrom"></span><span>last 30 days</span><span id="axTo"></span></div>
+      </div>
+      <div class="card">
+        <h2>Top pages · 30 days</h2>
+        <table id="pages"></table>
+      </div>
+      <div class="card">
+        <h2>Came from · 30 days</h2>
+        <table id="refs"></table>
+      </div>
+      <div class="card">
+        <h2>Minigun · Last Fire</h2>
+        <div class="kpis">
+          <div class="kpi"><b id="lfRed">–</b><span>invite codes entered</span></div>
+          <div class="kpi"><b id="lfUnl">–</b><span>players unlocked by invite</span></div>
+          <div class="kpi"><b id="lfCodes">–</b><span>installs with a code</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h2>Bulldozer · Hot Pursuit Zero</h2>
+        <div class="kpis">
+          <div class="kpi"><b id="hpRed">–</b><span>invite codes entered</span></div>
+          <div class="kpi"><b id="hpUnl">–</b><span>players unlocked by invite</span></div>
+          <div class="kpi"><b id="hpCodes">–</b><span>installs with a code</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="note">"Players unlocked by invite" = everyone who entered a code plus everyone whose code was entered (both get the reward).
+      "Installs with a code" ≈ installs of the versions with invites (1.0.5+ / 2.0.5+) that went online at least once.
+      Paid unlocks are not stored here: see Play Console → Monetize → Order management. Test entries are excluded.
+      Your own visits are not counted on this browser after opening this page.</p>
+    <p><button class="ghost" id="refresh">Refresh</button> <button class="ghost" id="signout">Sign out</button></p>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, collection, query, where, getDocs, getCountFromServer } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+try { localStorage.setItem('sss-no-track', '1'); } catch (e) {}   // the owner's own visits are not counted
+
+const app = initializeApp({ apiKey: 'AIzaSyCrIDt3inF5X2MwUu4r0uWN3l249s1qnqU', authDomain: 'six-strokes-games.firebaseapp.com', projectId: 'six-strokes-games' });
+const auth = getAuth(app), db = getFirestore(app);
+const OWNER = 'honcharuk.andrei@gmail.com';
+const TEST_CODES = new Set(['TESTZZ22', 'TESTZZ23', 'WZALYKSG']);   // made while setting up, not real players
+const $ = id => document.getElementById(id);
+const day = d => d.toISOString().slice(0, 10);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+$('signin').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $('gateErr').textContent = e.message);
+$('signout').onclick = () => signOut(auth);
+$('refresh').onclick = load;
+
+onAuthStateChanged(auth, user => {
+  const ok = user && user.email === OWNER;
+  $('gate').hidden = !!ok; $('app').hidden = !ok;
+  $('gateErr').textContent = user && !ok ? `Signed in as ${user.email}: this account has no access.` : '';
+  if (ok) load();
+});
+
+function table(el, rows) {
+  el.innerHTML = rows.length ? rows.map(([k, n]) => `<tr><td>${esc(k)}</td><td class="n">${n}</td></tr>`).join('') : '<tr><td class="note">No data yet</td></tr>';
+}
+
+async function load() {
+  $('meta').textContent = 'Loading…';
+  try {
+    const today = new Date(), from = new Date(today); from.setUTCDate(from.getUTCDate() - 29);
+    const visits = collection(db, 'visits');
+    const [all, recent] = await Promise.all([
+      getCountFromServer(visits),
+      getDocs(query(visits, where('day', '>=', day(from)))),
+    ]);
+    const byDay = {}, byPage = {}, byRef = {};
+    recent.forEach(d => { const v = d.data(); if (v.page.startsWith('/__')) return;   // setup tests
+      byDay[v.day] = (byDay[v.day] || 0) + 1; byPage[v.page] = (byPage[v.page] || 0) + 1; byRef[v.ref || '(direct / app)'] = (byRef[v.ref || '(direct / app)'] || 0) + 1; });
+    const days = [...Array(30)].map((_, i) => { const d = new Date(from); d.setUTCDate(from.getUTCDate() + i); return day(d); });
+    const sumLast = n => days.slice(-n).reduce((s, d) => s + (byDay[d] || 0), 0);
+    $('vToday').textContent = byDay[day(today)] || 0; $('v7').textContent = sumLast(7); $('v30').textContent = sumLast(30); $('vAll').textContent = Math.max(0, all.data().count - 1);   // minus the one setup test visit
+    const max = Math.max(1, ...days.map(d => byDay[d] || 0));
+    $('bars').innerHTML = days.map(d => `<div class="bar" style="height:${(100 * (byDay[d] || 0) / max).toFixed(1)}%" data-t="${d}: ${byDay[d] || 0}"></div>`).join('');
+    $('axFrom').textContent = days[0]; $('axTo').textContent = days[29];
+    table($('pages'), Object.entries(byPage).sort((a, b) => b[1] - a[1]).slice(0, 12));
+    table($('refs'), Object.entries(byRef).sort((a, b) => b[1] - a[1]).slice(0, 12));
+
+    for (const [g, p] of [['lastfire', 'lf'], ['hotpursuitzero', 'hp']]) {
+      const [codes, reds] = await Promise.all([getDocs(collection(db, 'games', g, 'codes')), getDocs(collection(db, 'games', g, 'redemptions'))]);
+      const real = reds.docs.map(d => d.data()).filter(r => !TEST_CODES.has(r.code));
+      const owners = new Set(real.map(r => r.owner));
+      $(p + 'Red').textContent = real.length;
+      $(p + 'Unl').textContent = real.length + owners.size;
+      $(p + 'Codes').textContent = codes.docs.filter(d => !TEST_CODES.has(d.id)).length;
+    }
+    $('meta').textContent = 'Updated ' + new Date().toLocaleString();
+  } catch (e) {
+    $('meta').innerHTML = '<span class="err">Could not load: ' + esc(e.message) + '</span>';
+  }
+}
+</script>
+</body>
+</html>

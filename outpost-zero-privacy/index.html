@@ -81,5 +81,10 @@ to match.</p>
 
 <footer><a href="/">Six Strokes Studio</a> · Outpost Zero</footer>
 </div>
+<script>/* Anonymous visit count for the studio's own stats: page path, day and referring site only; no cookies, no IP stored. */
+(function(){try{if(localStorage.getItem('sss-no-track'))return}catch(e){}
+var r='';try{r=document.referrer?new URL(document.referrer).hostname:''}catch(e){}if(r===location.hostname)r='';
+fetch('https://firestore.googleapis.com/v1/projects/six-strokes-games/databases/(default)/documents/visits?key=AIzaSyCrIDt3inF5X2MwUu4r0uWN3l249s1qnqU',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json'},
+body:JSON.stringify({fields:{page:{stringValue:location.pathname.slice(0,120)},day:{stringValue:new Date().toISOString().slice(0,10)},ref:{stringValue:r.slice(0,120)}}})}).catch(function(){});})();</script>
 </body>
 </html>

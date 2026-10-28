@@ -37,10 +37,10 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
 .note{color:var(--dim);font-size:13px;margin-top:10px}
 .err{color:var(--warn)}
 #app[hidden],#gate[hidden]{display:none}
-.head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
 .head h2{margin:0}
 .seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.seg button{background:transparent;color:var(--dim);border:0;border-radius:0;padding:4px 10px;font-size:13px;font-weight:400}
+.seg button{background:transparent;color:var(--dim);border:0;border-radius:0;padding:4px 10px;font-size:13px;font-weight:400;white-space:nowrap}
 .seg button.on{background:var(--me);color:#05070d;font-weight:600}
 .wide{grid-column:1/-1}
 .tl{max-height:420px;overflow-y:auto}

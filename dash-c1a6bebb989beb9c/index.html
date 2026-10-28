@@ -37,13 +37,19 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
 .note{color:var(--dim);font-size:13px;margin-top:10px}
 .err{color:var(--warn)}
 #app[hidden],#gate[hidden]{display:none}
-.head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
-.head h2{margin:0}
-.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
-.seg button{background:transparent;color:var(--dim);border:0;border-radius:0;padding:4px 10px;font-size:13px;font-weight:400;white-space:nowrap}
-.seg button.on{background:var(--me);color:#05070d;font-weight:600}
 .wide{grid-column:1/-1}
-.tl{max-height:420px;overflow-y:auto}
+.tl{max-height:420px;overflow-y:auto;padding-right:16px}
+.hours{margin-bottom:22px}
+.hour{flex:1;height:100%;display:flex;align-items:flex-end;position:relative;cursor:default}
+.hour i{display:block;width:100%;background:var(--me);border-radius:3px 3px 0 0;min-height:2px}
+.hour:hover i{background:#fff}
+.tip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);z-index:5;background:#000;border:1px solid var(--line);
+  border-radius:8px;padding:8px 10px;font-size:12px;line-height:1.45;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.hour:hover .tip{display:block}
+.hour.l .tip{left:0;transform:none}
+.hour.r .tip{left:auto;right:0;transform:none}
+.tip b{display:block;color:var(--me);margin-bottom:2px}
+.tip span{color:var(--me);margin-left:12px;float:right}
 .tl h3{font-size:13px;color:var(--dim);font-weight:600;margin:14px 0 4px;position:sticky;top:0;background:var(--card)}
 .tl h3:first-child{margin-top:0}
 .tl td.t{width:52px;color:var(--dim);font-variant-numeric:tabular-nums}
@@ -75,8 +81,7 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
         <div class="axis"><span id="axFrom"></span><span>last 30 days</span><span id="axTo"></span></div>
       </div>
       <div class="card">
-        <div class="head"><h2>Top pages</h2>
-          <div class="seg" id="pagesPeriod"><button data-n="30" class="on">30 days</button><button data-n="7">7 days</button><button data-n="1">Today</button></div></div>
+        <h2>Top pages · 30 days</h2>
         <table id="pages"></table>
       </div>
       <div class="card">
@@ -84,6 +89,11 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
         <table id="refs"></table>
       </div>
       <div class="card wide">
+        <h2>Today by hour</h2>
+        <div class="hours">
+          <div class="bars" id="hours"></div>
+          <div class="axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:59</span></div>
+        </div>
         <h2>Visits timeline · newest first</h2>
         <div class="tl" id="timeline"></div>
       </div>
@@ -138,13 +148,17 @@ onAuthStateChanged(auth, user => {
   if (ok) load();
 });
 
-let pagesByDay = {}, pagesDays = [], pagesN = 30;   // page -> day -> visits, for the Top pages period switch
-$('pagesPeriod').onclick = e => { const n = e.target.dataset.n; if (!n) return;
-  pagesN = +n; [...e.currentTarget.children].forEach(b => b.classList.toggle('on', b === e.target)); topPages(); };
-function topPages() {
-  const ds = pagesDays.slice(-pagesN);
-  table($('pages'), Object.entries(pagesByDay).map(([p, by]) => [p, ds.reduce((s, d) => s + (by[d] || 0), 0)])
-    .filter(r => r[1]).sort((a, b) => b[1] - a[1]).slice(0, 12));
+// Today's visits in 24 hourly bars; hovering a bar lists that hour's pages with their visit counts.
+function hours(list) {
+  const today = day(new Date()), byHour = [...Array(24)].map(() => ({}));
+  list.forEach(v => { if (v.day === today) { const h = byHour[v.at.getHours()]; h[v.page] = (h[v.page] || 0) + 1; } });
+  const totals = byHour.map(h => Object.values(h).reduce((s, n) => s + n, 0)), max = Math.max(1, ...totals);
+  $('hours').innerHTML = byHour.map((h, i) => {
+    const hh = String(i).padStart(2, '0'), rows = Object.entries(h).sort((a, b) => b[1] - a[1]);
+    const tip = `<b>${hh}:00–${hh}:59 · ${totals[i]} visit${totals[i] === 1 ? '' : 's'}</b>`
+      + rows.map(([p, n]) => `<div>${esc(p)}<span>${n}</span></div>`).join('');
+    return `<div class="hour${i < 4 ? ' l' : i > 19 ? ' r' : ''}"><i style="height:${(100 * totals[i] / max).toFixed(1)}%"></i><div class="tip">${tip}</div></div>`;
+  }).join('');
 }
 
 // Visits store only {page, day, ref}; the REST API also returns each document's createTime, which gives the exact moment.
@@ -185,9 +199,9 @@ async function load() {
     const list = recent.filter(v => !v.page.startsWith('/__') && v.at >= from).sort((a, b) => b.at - a.at);   // minus setup tests
     list.forEach(v => v.day = day(v.at));   // count by the local day of the visit, not the stored UTC day
     const byDay = {}, byRef = {};
-    pagesByDay = {};
+    const byPage = {};
     list.forEach(v => { byDay[v.day] = (byDay[v.day] || 0) + 1;
-      (pagesByDay[v.page] ||= {})[v.day] = (pagesByDay[v.page][v.day] || 0) + 1;
+      byPage[v.page] = (byPage[v.page] || 0) + 1;
       byRef[v.ref || '(direct / app)'] = (byRef[v.ref || '(direct / app)'] || 0) + 1; });
     const days = [...Array(30)].map((_, i) => day(new Date(from.getFullYear(), from.getMonth(), from.getDate() + i)));
     const sumLast = n => days.slice(-n).reduce((s, d) => s + (byDay[d] || 0), 0);
@@ -195,7 +209,8 @@ async function load() {
     const max = Math.max(1, ...days.map(d => byDay[d] || 0));
     $('bars').innerHTML = days.map(d => `<div class="bar" style="height:${(100 * (byDay[d] || 0) / max).toFixed(1)}%" data-t="${d}: ${byDay[d] || 0}"></div>`).join('');
     $('axFrom').textContent = days[0]; $('axTo').textContent = days[29];
-    pagesDays = days; topPages();
+    table($('pages'), Object.entries(byPage).sort((a, b) => b[1] - a[1]).slice(0, 12));
+    hours(list);
     timeline(list);
     table($('refs'), Object.entries(byRef).sort((a, b) => b[1] - a[1]).slice(0, 12));
 

@@ -37,6 +37,17 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
 .note{color:var(--dim);font-size:13px;margin-top:10px}
 .err{color:var(--warn)}
 #app[hidden],#gate[hidden]{display:none}
+.head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.head h2{margin:0}
+.seg{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{background:transparent;color:var(--dim);border:0;border-radius:0;padding:4px 10px;font-size:13px;font-weight:400}
+.seg button.on{background:var(--me);color:#05070d;font-weight:600}
+.wide{grid-column:1/-1}
+.tl{max-height:420px;overflow-y:auto}
+.tl h3{font-size:13px;color:var(--dim);font-weight:600;margin:14px 0 4px;position:sticky;top:0;background:var(--card)}
+.tl h3:first-child{margin-top:0}
+.tl td.t{width:52px;color:var(--dim);font-variant-numeric:tabular-nums}
+.tl td.r{text-align:right;color:var(--dim)}
 </style>
 </head>
 <body>
@@ -64,12 +75,17 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
         <div class="axis"><span id="axFrom"></span><span>last 30 days</span><span id="axTo"></span></div>
       </div>
       <div class="card">
-        <h2>Top pages · 30 days</h2>
+        <div class="head"><h2>Top pages</h2>
+          <div class="seg" id="pagesPeriod"><button data-n="30" class="on">30 days</button><button data-n="7">7 days</button><button data-n="1">Today</button></div></div>
         <table id="pages"></table>
       </div>
       <div class="card">
         <h2>Came from · 30 days</h2>
         <table id="refs"></table>
+      </div>
+      <div class="card wide">
+        <h2>Visits timeline · newest first</h2>
+        <div class="tl" id="timeline"></div>
       </div>
       <div class="card">
         <h2>Minigun · Last Fire</h2>
@@ -99,7 +115,7 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { getFirestore, collection, query, where, getDocs, getCountFromServer } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getFirestore, collection, getDocs, getCountFromServer } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 try { localStorage.setItem('sss-no-track', '1'); } catch (e) {}   // the owner's own visits are not counted
 
@@ -122,6 +138,40 @@ onAuthStateChanged(auth, user => {
   if (ok) load();
 });
 
+let pagesByDay = {}, pagesDays = [], pagesN = 30;   // page -> day -> visits, for the Top pages period switch
+$('pagesPeriod').onclick = e => { const n = e.target.dataset.n; if (!n) return;
+  pagesN = +n; [...e.currentTarget.children].forEach(b => b.classList.toggle('on', b === e.target)); topPages(); };
+function topPages() {
+  const ds = pagesDays.slice(-pagesN);
+  table($('pages'), Object.entries(pagesByDay).map(([p, by]) => [p, ds.reduce((s, d) => s + (by[d] || 0), 0)])
+    .filter(r => r[1]).sort((a, b) => b[1] - a[1]).slice(0, 12));
+}
+
+// Visits store only {page, day, ref}; the REST API also returns each document's createTime, which gives the exact moment.
+async function recentVisits(fromDay) {
+  const r = await fetch('https://firestore.googleapis.com/v1/projects/six-strokes-games/databases/(default)/documents:runQuery', {
+    method: 'POST', headers: { Authorization: 'Bearer ' + await auth.currentUser.getIdToken(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ structuredQuery: { from: [{ collectionId: 'visits' }],
+      where: { fieldFilter: { field: { fieldPath: 'day' }, op: 'GREATER_THAN_OR_EQUAL', value: { stringValue: fromDay } } } } }) });
+  const rows = await r.json();
+  if (!r.ok) throw new Error(rows[0]?.error?.message || rows.error?.message || r.statusText);
+  return rows.filter(x => x.document).map(({ document: d }) => ({ page: d.fields.page?.stringValue || '', day: d.fields.day?.stringValue || '',
+    ref: d.fields.ref?.stringValue || '', at: new Date(d.createTime) }));
+}
+
+function timeline(list) {
+  const key = d => d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+  const today = key(new Date()), yest = key(new Date(Date.now() - 864e5));
+  let html = '', cur = '';
+  for (const v of list.slice(0, 300)) {
+    const k = key(v.at);
+    if (k !== cur) { html += (cur ? '</table>' : '') + `<h3>${k === today ? 'Today' : k === yest ? 'Yesterday' : k}</h3><table>`; cur = k; }
+    html += `<tr><td class="t">${v.at.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</td><td>${esc(v.page)}</td>`
+      + `<td class="r">${esc(v.ref || 'direct / app')}</td></tr>`;
+  }
+  $('timeline').innerHTML = html ? html + '</table>' : '<p class="note">No visits yet</p>';
+}
+
 function table(el, rows) {
   el.innerHTML = rows.length ? rows.map(([k, n]) => `<tr><td>${esc(k)}</td><td class="n">${n}</td></tr>`).join('') : '<tr><td class="note">No data yet</td></tr>';
 }
@@ -131,20 +181,21 @@ async function load() {
   try {
     const today = new Date(), from = new Date(today); from.setUTCDate(from.getUTCDate() - 29);
     const visits = collection(db, 'visits');
-    const [all, recent] = await Promise.all([
-      getCountFromServer(visits),
-      getDocs(query(visits, where('day', '>=', day(from)))),
-    ]);
-    const byDay = {}, byPage = {}, byRef = {};
-    recent.forEach(d => { const v = d.data(); if (v.page.startsWith('/__')) return;   // setup tests
-      byDay[v.day] = (byDay[v.day] || 0) + 1; byPage[v.page] = (byPage[v.page] || 0) + 1; byRef[v.ref || '(direct / app)'] = (byRef[v.ref || '(direct / app)'] || 0) + 1; });
+    const [all, recent] = await Promise.all([getCountFromServer(visits), recentVisits(day(from))]);
+    const list = recent.filter(v => !v.page.startsWith('/__')).sort((a, b) => b.at - a.at);   // minus setup tests
+    const byDay = {}, byRef = {};
+    pagesByDay = {};
+    list.forEach(v => { byDay[v.day] = (byDay[v.day] || 0) + 1;
+      (pagesByDay[v.page] ||= {})[v.day] = (pagesByDay[v.page][v.day] || 0) + 1;
+      byRef[v.ref || '(direct / app)'] = (byRef[v.ref || '(direct / app)'] || 0) + 1; });
     const days = [...Array(30)].map((_, i) => { const d = new Date(from); d.setUTCDate(from.getUTCDate() + i); return day(d); });
     const sumLast = n => days.slice(-n).reduce((s, d) => s + (byDay[d] || 0), 0);
     $('vToday').textContent = byDay[day(today)] || 0; $('v7').textContent = sumLast(7); $('v30').textContent = sumLast(30); $('vAll').textContent = Math.max(0, all.data().count - 1);   // minus the one setup test visit
     const max = Math.max(1, ...days.map(d => byDay[d] || 0));
     $('bars').innerHTML = days.map(d => `<div class="bar" style="height:${(100 * (byDay[d] || 0) / max).toFixed(1)}%" data-t="${d}: ${byDay[d] || 0}"></div>`).join('');
     $('axFrom').textContent = days[0]; $('axTo').textContent = days[29];
-    table($('pages'), Object.entries(byPage).sort((a, b) => b[1] - a[1]).slice(0, 12));
+    pagesDays = days; topPages();
+    timeline(list);
     table($('refs'), Object.entries(byRef).sort((a, b) => b[1] - a[1]).slice(0, 12));
 
     for (const [g, p] of [['lastfire', 'lf'], ['hotpursuitzero', 'hp']]) {

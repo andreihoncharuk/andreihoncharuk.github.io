@@ -124,7 +124,7 @@ const auth = getAuth(app), db = getFirestore(app);
 const OWNER = 'honcharuk.andrei@gmail.com';
 const TEST_CODES = new Set(['TESTZZ22', 'TESTZZ23', 'WZALYKSG']);   // made while setting up, not real players
 const $ = id => document.getElementById(id);
-const day = d => d.toISOString().slice(0, 10);
+const day = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;   // local day
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 $('signin').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $('gateErr').textContent = e.message);
@@ -179,16 +179,17 @@ function table(el, rows) {
 async function load() {
   $('meta').textContent = 'Loading…';
   try {
-    const today = new Date(), from = new Date(today); from.setUTCDate(from.getUTCDate() - 29);
+    const today = new Date(), from = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 29);   // local midnight, 30 days back
     const visits = collection(db, 'visits');
-    const [all, recent] = await Promise.all([getCountFromServer(visits), recentVisits(day(from))]);
-    const list = recent.filter(v => !v.page.startsWith('/__')).sort((a, b) => b.at - a.at);   // minus setup tests
+    const [all, recent] = await Promise.all([getCountFromServer(visits), recentVisits(new Date(from - 864e5).toISOString().slice(0, 10))]);   // stored days are UTC: start a day early, cut by time below
+    const list = recent.filter(v => !v.page.startsWith('/__') && v.at >= from).sort((a, b) => b.at - a.at);   // minus setup tests
+    list.forEach(v => v.day = day(v.at));   // count by the local day of the visit, not the stored UTC day
     const byDay = {}, byRef = {};
     pagesByDay = {};
     list.forEach(v => { byDay[v.day] = (byDay[v.day] || 0) + 1;
       (pagesByDay[v.page] ||= {})[v.day] = (pagesByDay[v.page][v.day] || 0) + 1;
       byRef[v.ref || '(direct / app)'] = (byRef[v.ref || '(direct / app)'] || 0) + 1; });
-    const days = [...Array(30)].map((_, i) => { const d = new Date(from); d.setUTCDate(from.getUTCDate() + i); return day(d); });
+    const days = [...Array(30)].map((_, i) => day(new Date(from.getFullYear(), from.getMonth(), from.getDate() + i)));
     const sumLast = n => days.slice(-n).reduce((s, d) => s + (byDay[d] || 0), 0);
     $('vToday').textContent = byDay[day(today)] || 0; $('v7').textContent = sumLast(7); $('v30').textContent = sumLast(30); $('vAll').textContent = Math.max(0, all.data().count - 1);   // minus the one setup test visit
     const max = Math.max(1, ...days.map(d => byDay[d] || 0));

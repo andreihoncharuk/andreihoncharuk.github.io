@@ -39,7 +39,13 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
 #app[hidden],#gate[hidden]{display:none}
 .wide{grid-column:1/-1}
 .tl{max-height:420px;overflow-y:auto;padding-right:16px}
-.hours{margin-bottom:22px}
+.dayrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.dayrow input{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 10px;color-scheme:dark}
+.dayrow button.ghost{min-width:36px}
+.dayrow .note{margin:0 0 0 auto}
+.split{display:grid;gap:16px;grid-template-columns:1fr 2fr}
+@media (max-width:720px){.split{grid-template-columns:1fr}}
+#hours{height:220px}
 .hour{flex:1;height:100%;display:flex;align-items:flex-end;position:relative;cursor:default}
 .hour i{display:block;width:100%;background:var(--me);border-radius:3px 3px 0 0;min-height:2px}
 .hour:hover i{background:#fff}
@@ -47,12 +53,11 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
   border-radius:8px;padding:8px 10px;font-size:12px;line-height:1.45;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.5)}
 .hour:hover .tip{display:block}
 .hour.l .tip{left:0;transform:none}
+.split .tl{max-height:300px}
 .hour.r .tip{left:auto;right:0;transform:none}
 .tip b{display:block;color:var(--me);margin-bottom:2px}
 .tip div{display:flex;justify-content:space-between;gap:16px}
 .tip span{color:var(--me);font-variant-numeric:tabular-nums}
-.tl h3{font-size:13px;color:var(--dim);font-weight:600;margin:14px 0 4px;position:sticky;top:0;background:var(--card)}
-.tl h3:first-child{margin-top:0}
 .tl td.t{width:52px;color:var(--dim);font-variant-numeric:tabular-nums}
 .tl td.r{text-align:right;color:var(--dim)}
 </style>
@@ -89,14 +94,25 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
         <h2>Came from · 30 days</h2>
         <table id="refs"></table>
       </div>
-      <div class="card wide">
-        <h2>Today by hour</h2>
-        <div class="hours">
-          <div class="bars" id="hours"></div>
-          <div class="axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>23:59</span></div>
+      <div class="wide">
+        <div class="card dayrow">
+          <button class="ghost" id="dayPrev" title="Previous day">‹</button>
+          <input type="date" id="dayPick">
+          <button class="ghost" id="dayNext" title="Next day">›</button>
+          <button class="ghost" id="dayToday">Today</button>
+          <span class="note" id="dayTotal"></span>
         </div>
-        <h2>Visits timeline · newest first</h2>
-        <div class="tl" id="timeline"></div>
+        <div class="split" style="margin-top:16px">
+          <div class="card">
+            <h2 id="hoursTitle">Today by hour</h2>
+            <div class="bars" id="hours"></div>
+            <div class="axis"><span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span></div>
+          </div>
+          <div class="card">
+            <h2>Visits timeline · newest first</h2>
+            <div class="tl" id="timeline"></div>
+          </div>
+        </div>
       </div>
       <div class="card">
         <h2>Minigun · Last Fire</h2>
@@ -150,15 +166,33 @@ onAuthStateChanged(auth, user => {
 });
 
 // Today's visits in 24 hourly bars; hovering a bar lists that hour's pages with their visit counts.
+// The date picker scopes the hourly chart and the timeline to one local day within the loaded 30 days.
+let visitList = [], shownDay = '';
+const pick = $('dayPick');
+const label = d => d === day(new Date()) ? 'Today' : new Date(d + 'T00:00').toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+function showDay(d) {
+  shownDay = d < pick.min ? pick.min : d > pick.max ? pick.max : d;
+  pick.value = shownDay;
+  $('dayPrev').disabled = shownDay === pick.min; $('dayNext').disabled = shownDay === pick.max;
+  const list = visitList.filter(v => v.day === shownDay);
+  $('dayTotal').textContent = `${list.length} visit${list.length === 1 ? '' : 's'}`;
+  $('hoursTitle').textContent = label(shownDay) + ' by hour';
+  hours(list); timeline(list);
+}
+const shift = n => { const d = new Date(shownDay + 'T00:00'); d.setDate(d.getDate() + n); showDay(day(d)); };
+pick.onchange = () => pick.value && showDay(pick.value);
+$('dayPrev').onclick = () => shift(-1); $('dayNext').onclick = () => shift(1);
+$('dayToday').onclick = () => showDay(day(new Date()));
+
 function hours(list) {
-  const today = day(new Date()), byHour = [...Array(24)].map(() => ({}));
-  list.forEach(v => { if (v.day === today) { const h = byHour[v.at.getHours()]; h[v.page] = (h[v.page] || 0) + 1; } });
+  const byHour = [...Array(24)].map(() => ({}));
+  list.forEach(v => { const h = byHour[v.at.getHours()]; h[v.page] = (h[v.page] || 0) + 1; });
   const totals = byHour.map(h => Object.values(h).reduce((s, n) => s + n, 0)), max = Math.max(1, ...totals);
   $('hours').innerHTML = byHour.map((h, i) => {
     const hh = String(i).padStart(2, '0'), rows = Object.entries(h).sort((a, b) => b[1] - a[1]);
     const tip = `<b>${hh}:00–${hh}:59 · ${totals[i]} visit${totals[i] === 1 ? '' : 's'}</b>`
       + rows.map(([p, n]) => `<div>${esc(p)}<span>${n}</span></div>`).join('');
-    return `<div class="hour${i < 4 ? ' l' : i > 19 ? ' r' : ''}"><i style="height:${(100 * totals[i] / max).toFixed(1)}%"></i><div class="tip">${tip}</div></div>`;
+    return `<div class="hour${i < 8 ? ' l' : i > 15 ? ' r' : ''}"><i style="height:${(100 * totals[i] / max).toFixed(1)}%"></i><div class="tip">${tip}</div></div>`;
   }).join('');
 }
 
@@ -175,16 +209,8 @@ async function recentVisits(fromDay) {
 }
 
 function timeline(list) {
-  const key = d => d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
-  const today = key(new Date()), yest = key(new Date(Date.now() - 864e5));
-  let html = '', cur = '';
-  for (const v of list.slice(0, 300)) {
-    const k = key(v.at);
-    if (k !== cur) { html += (cur ? '</table>' : '') + `<h3>${k === today ? 'Today' : k === yest ? 'Yesterday' : k}</h3><table>`; cur = k; }
-    html += `<tr><td class="t">${v.at.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</td><td>${esc(v.page)}</td>`
-      + `<td class="r">${esc(v.ref || 'direct / app')}</td></tr>`;
-  }
-  $('timeline').innerHTML = html ? html + '</table>' : '<p class="note">No visits yet</p>';
+  $('timeline').innerHTML = list.length ? '<table>' + list.map(v => `<tr><td class="t">${v.at.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</td>`
+    + `<td>${esc(v.page)}</td><td class="r">${esc(v.ref || 'direct / app')}</td></tr>`).join('') + '</table>' : '<p class="note">No visits on this day</p>';
 }
 
 function table(el, rows) {
@@ -211,8 +237,8 @@ async function load() {
     $('bars').innerHTML = days.map(d => `<div class="bar" style="height:${(100 * (byDay[d] || 0) / max).toFixed(1)}%" data-t="${d}: ${byDay[d] || 0}"></div>`).join('');
     $('axFrom').textContent = days[0]; $('axTo').textContent = days[29];
     table($('pages'), Object.entries(byPage).sort((a, b) => b[1] - a[1]).slice(0, 12));
-    hours(list);
-    timeline(list);
+    visitList = list; pick.min = days[0]; pick.max = days[29];
+    showDay(shownDay || days[29]);
     table($('refs'), Object.entries(byRef).sort((a, b) => b[1] - a[1]).slice(0, 12));
 
     for (const [g, p] of [['lastfire', 'lf'], ['hotpursuitzero', 'hp']]) {

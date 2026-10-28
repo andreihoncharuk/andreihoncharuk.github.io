@@ -43,8 +43,8 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
 .dayrow input{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:5px 10px;color-scheme:dark}
 .dayrow button.ghost{min-width:36px}
 .dayrow .note{margin:0 0 0 auto}
-.split{display:grid;gap:16px;grid-template-columns:1fr 2fr}
-@media (max-width:720px){.split{grid-template-columns:1fr}}
+.split{display:grid;gap:16px;grid-template-columns:minmax(0,1fr) minmax(0,2fr)}
+@media (max-width:720px){.split{grid-template-columns:minmax(0,1fr)}}
 #hours{height:220px}
 .hour{flex:1;height:100%;display:flex;align-items:flex-end;position:relative;cursor:default}
 .hour i{display:block;width:100%;background:var(--me);border-radius:3px 3px 0 0;min-height:2px}
@@ -58,8 +58,11 @@ button.ghost{background:transparent;color:var(--dim);border:1px solid var(--line
 .tip b{display:block;color:var(--me);margin-bottom:2px}
 .tip div{display:flex;justify-content:space-between;gap:16px}
 .tip span{color:var(--me);font-variant-numeric:tabular-nums}
+.tl table{table-layout:fixed}
+.tl td{overflow-wrap:anywhere}
 .tl td.t{width:52px;color:var(--dim);font-variant-numeric:tabular-nums}
-.tl td.r{text-align:right;color:var(--dim)}
+.tl td.r{width:38%;text-align:right;color:var(--dim)}
+td{overflow-wrap:anywhere}
 </style>
 </head>
 <body>
@@ -152,6 +155,7 @@ const OWNER = 'honcharuk.andrei@gmail.com';
 const TEST_CODES = new Set(['TESTZZ22', 'TESTZZ23', 'WZALYKSG']);   // made while setting up, not real players
 const $ = id => document.getElementById(id);
 const day = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;   // local day
+const short = s => (s = String(s)).length > 40 ? s.slice(0, 39) + '…' : s;   // visits are public writes: odd long values must not stretch the layout
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 $('signin').onclick = () => signInWithPopup(auth, new GoogleAuthProvider()).catch(e => $('gateErr').textContent = e.message);
@@ -191,7 +195,7 @@ function hours(list) {
   $('hours').innerHTML = byHour.map((h, i) => {
     const hh = String(i).padStart(2, '0'), rows = Object.entries(h).sort((a, b) => b[1] - a[1]);
     const tip = `<b>${hh}:00–${hh}:59 · ${totals[i]} visit${totals[i] === 1 ? '' : 's'}</b>`
-      + rows.map(([p, n]) => `<div>${esc(p)}<span>${n}</span></div>`).join('');
+      + rows.map(([p, n]) => `<div>${esc(short(p))}<span>${n}</span></div>`).join('');
     return `<div class="hour${i < 8 ? ' l' : i > 15 ? ' r' : ''}"><i style="height:${(100 * totals[i] / max).toFixed(1)}%"></i><div class="tip">${tip}</div></div>`;
   }).join('');
 }
@@ -210,11 +214,11 @@ async function recentVisits(fromDay) {
 
 function timeline(list) {
   $('timeline').innerHTML = list.length ? '<table>' + list.map(v => `<tr><td class="t">${v.at.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })}</td>`
-    + `<td>${esc(v.page)}</td><td class="r">${esc(v.ref || 'direct / app')}</td></tr>`).join('') + '</table>' : '<p class="note">No visits on this day</p>';
+    + `<td title="${esc(v.page)}">${esc(short(v.page))}</td><td class="r" title="${esc(v.ref)}">${esc(short(v.ref || 'direct / app'))}</td></tr>`).join('') + '</table>' : '<p class="note">No visits on this day</p>';
 }
 
 function table(el, rows) {
-  el.innerHTML = rows.length ? rows.map(([k, n]) => `<tr><td>${esc(k)}</td><td class="n">${n}</td></tr>`).join('') : '<tr><td class="note">No data yet</td></tr>';
+  el.innerHTML = rows.length ? rows.map(([k, n]) => `<tr><td title="${esc(k)}">${esc(short(k))}</td><td class="n">${n}</td></tr>`).join('') : '<tr><td class="note">No data yet</td></tr>';
 }
 
 async function load() {

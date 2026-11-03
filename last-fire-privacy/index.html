@@ -41,7 +41,7 @@ footer{margin-top:48px;padding-top:22px;border-top:1.5px solid var(--line);color
 <div class="wrap">
 <a class="back" href="/"><span>&larr;</span> Six Strokes Studio</a>
 <h1>Privacy policy — Last Fire</h1>
-<p class="meta">Last updated: 14 October 2026</p>
+<p class="meta">Last updated: 3 November 2026</p>
 
 <p>Last Fire (“the app”) is published by Six Strokes Studio (Andrii Honcharuk),
 <a href="mailto:sixstrokesstudio@gmail.com">sixstrokesstudio@gmail.com</a>. This policy
@@ -50,10 +50,10 @@ covers the Last Fire mobile app (Android package <code>com.sixstrokes.lastfire</
 <h2>What the app stores</h2>
 <p>A few values are saved only on your device: your best wave, how many runs and deaths you have
 had, and your music and sound settings. A run in progress is not saved. The app has no account
-system and does not send any of this anywhere.</p>
+system and does not send any of this anywhere (apart from the anonymous play statistics described below).</p>
 <p>Uninstalling the app removes this data. Your game progress never leaves your device,
 so we hold no copy of it. The only data stored outside your device is the invite-code data
-described below.</p>
+and the anonymous play statistics described below.</p>
 
 <h2>Advertising</h2>
 <p>The app shows ads through Google AdMob, and never in the middle of a fight:</p>
@@ -92,6 +92,22 @@ Firebase.</li>
 <p>This data is used only for the invite feature. It is not used for advertising or sold to anyone.
 Google acts as our processor for it (<a href="https://firebase.google.com/support/privacy">Firebase
 privacy and security</a>). To have your invite data deleted, follow the steps on our <a href="/data-deletion/">data deletion page</a>.</p>
+
+<h2>Play statistics</h2>
+<p>From version 1.0.14, the app sends a few anonymous play statistics so we can see where the game is too
+hard or too confusing, for example how far players get before their first run ends. It sends a small record
+when the app opens, when a run ends and when you leave the app. Each record contains only:</p>
+<ul>
+<li>the event (app opened, run ended, app left, rating requested), the app version and the date;</li>
+<li>game numbers: the wave reached, the run length in seconds, how the run ended (for example “cold”),
+how many runs you have played and how many creatures you defeated;</li>
+<li>a random ID made by the app on first launch, so records from one installation can be counted
+together. It is not linked to your name, email, Google account, advertising identifier or invite code.</li>
+</ul>
+<p>The records are stored in Cloud Firestore (Google Firebase, see above), are used only to improve the
+game, and are never used for advertising or sold. The app never waits for them: if you are offline, nothing
+is sent. As with any internet connection, Google receives the device’s IP address when a record is sent; we
+do not store it.</p>
 
 <h2>Purchases</h2>
 <p>The app offers one optional in-app purchase, the minigun, through Google Play Billing. Payment is handled

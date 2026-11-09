@@ -7,13 +7,13 @@
 <link rel="manifest" href="/site.webmanifest">
 <meta name="theme-color" content="#05070d">
 <title>Six Strokes Studio</title>
-<meta name="description" content="Six Strokes Studio - small, hand-made games.">
+<meta name="description" content="Six Strokes Studio - small, hand-made games. Exfil 2088: Rivals, an online extraction shooter, is coming in December.">
 <meta property="og:title" content="Six Strokes Studio">
-<meta property="og:description" content="Small, hand-made games.">
-<meta property="og:image" content="https://andreihoncharuk.github.io/img/feature/rockbreaker.png">
+<meta property="og:description" content="Exfil 2088: Rivals is coming soon. Get a launch-day email.">
+<meta property="og:image" content="https://andreihoncharuk.github.io/img/feature/exfil-rivals.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#05070d;--panel:#0b0f19;--ink:#e6edf3;--dim:#8b96a8;--line:#28324a;--me:#6cf5c7}
 *{box-sizing:border-box}
@@ -75,6 +75,54 @@ h3{font-size:18px;font-weight:600;margin:0;line-height:1.3}
 .pp{font-size:14px}
 .pp-line{margin:-4px 0 12px;line-height:1.3}   /* 10px above (after the 14px paragraph margin), 16px below */
 .play.soon,.play.soon:hover,.hero .play.soon,.hero .play.soon:hover{background:transparent;border-style:dashed;border-color:var(--line);color:var(--dim);cursor:default}
+/* coming soon: the launch banner, the operator leaping out of it, and the launch-email form */
+.launch{margin:84px 0 56px;background:var(--panel);border:1.5px solid #4a2a5c;border-radius:16px;
+        box-shadow:0 0 0 1px rgba(255,74,215,.08),0 20px 60px -20px rgba(255,74,215,.35)}
+.banner{position:relative;aspect-ratio:1024/440;border-radius:15px 15px 0 0}
+.banner .street{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated;border-radius:15px 15px 0 0;filter:saturate(1.15)}
+.banner::before{content:"";position:absolute;inset:0;border-radius:15px 15px 0 0;z-index:1;
+                background:linear-gradient(90deg,rgba(5,7,13,.92) 0%,rgba(5,7,13,.7) 38%,rgba(5,7,13,0) 70%),linear-gradient(0deg,var(--panel) 0%,rgba(11,15,25,0) 22%)}
+.rain{position:absolute;inset:0;z-index:1;border-radius:15px 15px 0 0;overflow:hidden;opacity:.5;
+      background:repeating-linear-gradient(100deg,transparent 0 22px,rgba(160,180,255,.18) 22px 23px,transparent 23px 47px);
+      background-size:200px 200px;animation:rain .45s linear infinite}
+@keyframes rain{to{background-position:-36px 200px}}
+.banner-text{position:absolute;z-index:3;left:34px;bottom:30px;max-width:52%}
+.soon{display:inline-block;font-family:Silkscreen,monospace;font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:#05070d;
+      background:#ffd84a;padding:5px 10px 4px;border-radius:4px;box-shadow:0 0 18px rgba(255,216,74,.55);animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 4px rgba(255,216,74,.2)}}
+.logo{font-family:Silkscreen,monospace;font-weight:700;line-height:.95;margin:14px 0 10px;text-transform:uppercase}
+.logo span{display:block;font-size:30px;color:#f4f1ff;letter-spacing:.06em;text-shadow:3px 3px 0 #05070d}
+.logo b{display:block;font-size:76px;color:#f4f1ff;letter-spacing:.04em;text-shadow:-3px 0 0 #3ef3ff,3px 0 0 #ff4ad7,4px 5px 0 #05070d}
+.banner-text .tag{font-family:Silkscreen,monospace;font-size:15px;color:#9ff9ff;letter-spacing:.04em;margin:0}
+.operator{position:absolute;z-index:2;right:9%;bottom:-6%;height:128%;width:auto;image-rendering:pixelated;
+          filter:drop-shadow(0 0 22px rgba(255,74,215,.55)) drop-shadow(10px 18px 0 rgba(0,0,0,.35));
+          transform-origin:50% 100%;animation:leap 1s cubic-bezier(.2,1.4,.4,1) both,hover 3.2s ease-in-out 1s infinite}
+@keyframes leap{from{transform:translateY(22%) scale(.82);opacity:0}to{transform:none;opacity:1}}
+@keyframes hover{50%{transform:translateY(-2.5%)}}
+.launch-body{display:grid;grid-template-columns:1.25fr 1fr;gap:28px;padding:22px 30px 28px;position:relative;z-index:3}
+.launch-about>p:not(.links){font-size:16px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:4px 0 18px}
+.facts li{font-size:13px;font-weight:600;color:var(--ink);border:1.5px solid var(--line);border-radius:999px;padding:4px 11px}
+.notify{background:#120b1c;border:1.5px solid #4a2a5c;border-radius:14px;padding:20px;align-self:start}
+.notify h3{font-size:20px;margin:0 0 8px;color:#fff}
+.notify p{font-size:15px}
+.field{display:flex;gap:8px;margin:4px 0 10px}
+.field input{flex:1;min-width:0;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:9px;padding:10px 12px}
+.field input:focus{outline:none;border-color:#ff4ad7}
+.field button{font:inherit;font-size:15px;font-weight:700;color:#05070d;background:#ff4ad7;border:0;border-radius:9px;padding:10px 16px;cursor:pointer;white-space:nowrap}
+.field button:hover,.field button:focus-visible{background:#ff7ae2}
+.field button:disabled{opacity:.6;cursor:default}
+.fine{font-size:13px;margin:0}
+.fine.ok{color:var(--me);font-size:15px}
+.fine.bad{color:#ffb86b}
+.notify.done .field{display:none}
+@media(prefers-reduced-motion:reduce){.rain,.soon,.operator{animation:none}}
+@media(max-width:820px){.launch{margin-top:72px}.banner{aspect-ratio:4/3}.banner-text{left:20px;bottom:20px;max-width:62%}
+  .logo span{font-size:20px}.logo b{font-size:46px}.operator{right:2%;height:118%}
+  .banner::before{background:linear-gradient(90deg,rgba(5,7,13,.9) 0%,rgba(5,7,13,.55) 50%,rgba(5,7,13,0) 75%),linear-gradient(0deg,var(--panel) 0%,rgba(11,15,25,0) 30%)}
+  .launch-body{grid-template-columns:1fr;padding:18px 20px 22px}}
+@media(max-width:600px){.launch{margin-top:60px}.banner{aspect-ratio:1/1}.banner-text{max-width:70%}.banner-text .tag{font-size:12px}
+  .logo span{font-size:17px}.logo b{font-size:38px}.operator{right:-4%;height:96%;bottom:18%}.field{flex-direction:column}}
 footer{margin-top:56px;padding-top:22px;border-top:1.5px solid var(--line);color:var(--dim);font-size:14px;
        display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
 @media(max-width:820px){.hero.wide,.hero.wide.flip{flex-direction:column}.hero.wide .shot{flex:none;aspect-ratio:1024/500;min-height:0}.hero.wide .hero-body{padding:18px 20px 20px}.hero.wide h2{font-size:23px}}
@@ -87,44 +135,35 @@ footer{margin-top:56px;padding-top:22px;border-top:1.5px solid var(--line);color
     <nav class="social"><a href="https://play.google.com/store/apps/developer?id=Six+Strokes+Studio" aria-label="Google Play" title="All our games on Google Play"><svg viewBox="-6 -5 32 32" fill="currentColor" aria-hidden="true"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg></a><a href="https://www.youtube.com/@SixStrokesStudio" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg></a><a href="https://www.tiktok.com/@sixstrokes.studio" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9.1a7.3 7.3 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.2-1.6z"/></svg></a><a href="https://www.instagram.com/sixstrokesstudio/" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.8a3.1 3.1 0 1 1 3.1-3.1 3.1 3.1 0 0 1-3.1 3.1zm6-8a1.1 1.1 0 1 1-1.1-1.1A1.1 1.1 0 0 1 18 7.1zM21.9 8.2a5.4 5.4 0 0 0-1.5-3.8 5.4 5.4 0 0 0-3.8-1.5C15.1 2.8 8.9 2.8 7.4 2.9a5.4 5.4 0 0 0-3.8 1.5 5.4 5.4 0 0 0-1.5 3.8c-.1 1.5-.1 6.1 0 7.6a5.4 5.4 0 0 0 1.5 3.8 5.4 5.4 0 0 0 3.8 1.5c1.5.1 7.7.1 9.2 0a5.4 5.4 0 0 0 3.8-1.5 5.4 5.4 0 0 0 1.5-3.8c.1-1.5.1-6.1 0-7.6zm-2.1 9.4a3.1 3.1 0 0 1-1.7 1.7c-1.2.5-4 .4-5.3.4s-4.2.1-5.3-.4a3.1 3.1 0 0 1-1.7-1.7c-.5-1.2-.4-4-.4-5.3s-.1-4.2.4-5.3a3.1 3.1 0 0 1 1.7-1.7c1.2-.5 4-.4 5.3-.4s4.2-.1 5.3.4a3.1 3.1 0 0 1 1.7 1.7c.5 1.2.4 4 .4 5.3s.1 4.2-.4 5.3z"/></svg></a></nav>
   </header>
 
+  <section class="launch" id="exfil-rivals" aria-labelledby="er-title">
+    <div class="banner">
+      <img class="street" src="/img/feature/exfil-rivals-street.png" alt="" width="512" height="250" loading="eager">
+      <div class="rain" aria-hidden="true"></div>
+      <div class="banner-text">
+        <span class="soon">Coming soon</span>
+        <h2 class="logo" id="er-title"><span>Exfil 2088</span> <b>Rivals</b></h2>
+        <p class="tag">6 operators. 1 city. 2 flyers out.</p>
+      </div>
+      <img class="operator" src="/img/feature/exfil-rivals-operator.png" alt="An operator in an oni mask leaping off the evac pad, rifle up" width="378" height="555" loading="eager">
+    </div>
+    <div class="launch-body">
+      <div class="launch-about">
+        <div class="hero-head"><img class="avatar pixel" src="/img/exfil-rivals.png" alt="" width="56" height="56"><div><h3>Exfil 2088: Rivals</h3><p class="tag">Loot. Fight. Get out alive.</p></div></div>
+        <p>An online extraction shooter in a rain-soaked neon city. Six operators drop in among the infected: crack safes and weapon cases, take a rival&rsquo;s whole bag, and when the evac flyers arrive, hold the pad for 4.5 seconds while nobody else is on it. Miss the flight and the purge finds you.</p>
+        <ul class="facts"><li>6 players online</li><li>4-minute matches</li><li>8 maps</li><li>Free on Android</li></ul>
+        <p class="links"><a class="play yt" href="https://www.youtube.com/@SixStrokesStudio"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Follow on YouTube</a><a class="play yt" href="https://www.tiktok.com/@sixstrokes.studio"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9.1a7.3 7.3 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.2-1.6z"/></svg> TikTok</a></p>
+      </div>
+      <form class="notify" id="notify" novalidate>
+        <h3>Be there on day one</h3>
+        <p>Launching in December. Leave your email and we&rsquo;ll write once, the day it&rsquo;s out, so you&rsquo;re in the first matches while the lobbies fill with real rivals.</p>
+        <div class="field"><input type="email" name="email" required maxlength="120" placeholder="you@example.com" aria-label="Your email" autocomplete="email"><button type="submit">Notify me</button></div>
+        <p class="fine" id="notifyMsg" role="status">One email at launch. No spam, never shared. <a href="/data-deletion/#launch-emails">Privacy</a></p>
+      </form>
+    </div>
+  </section>
+
   <p class="label">Featured</p>
   <section class="heroes">
-    <article class="hero wide">
-      <a class="shot" href="https://play.google.com/store/apps/details?id=com.sixstrokes.rockbreaker" aria-label="Rockbreaker on Google Play"><img src="/img/feature/rockbreaker.png" alt="Rockbreaker" width="1024" height="500" loading="eager"></a>
-      <div class="hero-body">
-        <div class="hero-head"><img class="avatar" src="/img/rockbreaker.png" alt="" width="56" height="56"><div><h2>Rockbreaker</h2><p class="tag">Tap the rock. Build the fleet. Dig to the core.</p></div></div>
-        <p>Mine a lonely asteroid one tap at a time in monochrome pixel art. Hire astronauts, drones and laser satellites, fight off pirates, catch meteor showers and dig through eight layers of rock.</p>
-        <p class="pp-line"><a class="pp" href="/rockbreaker-privacy/">Privacy policy</a></p>
-        <p class="links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.rockbreaker"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a class="play yt" href="https://youtu.be/jzMEdEEaNYs"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Trailer</a></p>
-      </div>
-    </article>
-    <article class="hero">
-      <a class="shot" href="https://play.google.com/store/apps/details?id=com.sixstrokes.akio" aria-label="Mr. Akio: The Game on Google Play"><img src="/img/feature/mr-akio.png" alt="Mr. Akio: The Game" width="1024" height="500" loading="eager"></a>
-      <div class="hero-body">
-        <div class="hero-head"><img class="avatar" src="/img/mr-akio.png" alt="" width="56" height="56"><div><h2>Mr. Akio: The Game</h2><p class="tag">Run. Jump. Dodge the drones.</p></div></div>
-        <p>A brave little cat races across a pixel-art city. Jump the sofas and spikes, outsmart attack drones, charging cannons and laser bosses, and collect fish to unlock seven more cats.</p>
-        <p class="pp-line"><a class="pp" href="/mr-akio-privacy/">Privacy policy</a></p>
-        <p class="links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.akio"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a class="play yt" href="https://youtu.be/pkpDen8IPP0"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Trailer</a></p>
-      </div>
-    </article>
-    <article class="hero">
-      <a class="shot" href="https://play.google.com/store/apps/details?id=com.sixstrokes.hotpursuitzero" aria-label="Hot Pursuit Zero on Google Play"><img src="/img/feature/hot-pursuit-zero.png" alt="Hot Pursuit Zero" width="1024" height="500" loading="eager"></a>
-      <div class="hero-body">
-        <div class="hero-head"><img class="avatar" src="/img/hot-pursuit-zero.png" alt="" width="56" height="56"><div><h2>Hot Pursuit Zero</h2><p class="tag">Outrun them. Or don't.</p></div></div>
-        <p>A pixel-art police chase through farms, deserts and forests. Ram cruisers, fire missiles, lure the cops into trees, and unlock seven cars on the way to five wanted stars.</p>
-        <p class="pp-line"><a class="pp" href="/hot-pursuit-zero-privacy/">Privacy policy</a></p>
-        <p class="links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.hotpursuitzero"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a class="play yt" href="https://youtu.be/FH5e0ZDJmV0"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Trailer</a></p>
-      </div>
-    </article>
-    <article class="hero wide flip">
-      <a class="shot" href="https://play.google.com/store/apps/details?id=com.sixstrokes.lastfire" aria-label="Last Fire on Google Play"><img src="/img/feature/last-fire.png" alt="Last Fire: a campfire in a dark pixel-art forest, ringed by defenses and shadow creatures" width="1024" height="500" loading="lazy"></a>
-      <div class="hero-body">
-        <div class="hero-head"><img class="avatar" src="/img/last-fire.png" alt="" width="64" height="64"><div><h2>Last Fire</h2><p class="tag">Gather by day. Build defenses. Keep the fire alive.</p></div></div>
-        <p>Survive the night around one campfire in hand-made pixel art. Gather wood, metal and glass, build fences, traps, tesla coils and mortars, and hold the line as every wave of shadow creatures grows.</p>
-        <p class="pp-line"><a class="pp" href="/last-fire-privacy/">Privacy policy</a></p>
-        <p class="links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.lastfire"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a class="play yt" href="https://youtu.be/NG46PmNsf64"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Trailer</a></p>
-      </div>
-    </article>
     <article class="hero">
       <a class="shot" href="https://play.google.com/store/apps/details?id=com.sixstrokes.starwall" aria-label="Starwall 2088 on Google Play"><img src="/img/feature/starwall-2088.png" alt="Starwall 2088: the neon logo, an Aegis, a Cash Crab and a Razor, beside two scenes of turrets firing up a rainy street" width="1024" height="500" loading="lazy"></a>
       <div class="hero-body">
@@ -141,6 +180,42 @@ footer{margin-top:56px;padding-top:22px;border-top:1.5px solid var(--line);color
         <p>A one-tap wall-jumper up a cyberpunk shaft. Play as a cyber cat, dog, chicken, frog, pig or fox, dodge pistons, lasers and drones, and take on four giant bosses in Light or Hard mode.</p>
         <p class="pp-line"><a class="pp" href="/pawkour-2088-privacy/">Privacy policy</a></p>
         <p class="links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.pawkour2088"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a class="play yt" href="https://youtu.be/awAnIiqaRDs"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Trailer</a></p>
+      </div>
+    </article>
+    <article class="hero">
+      <a class="shot" href="https://play.google.com/store/apps/details?id=com.sixstrokes.lastfire" aria-label="Last Fire on Google Play"><img src="/img/feature/last-fire.png" alt="Last Fire: a campfire in a dark pixel-art forest, ringed by defenses and shadow creatures" width="1024" height="500" loading="lazy"></a>
+      <div class="hero-body">
+        <div class="hero-head"><img class="avatar" src="/img/last-fire.png" alt="" width="56" height="56"><div><h2>Last Fire</h2><p class="tag">Gather by day. Build defenses. Keep the fire alive.</p></div></div>
+        <p>Survive the night around one campfire in hand-made pixel art. Gather wood, metal and glass, build fences, traps, tesla coils and mortars, and hold the line as every wave of shadow creatures grows.</p>
+        <p class="pp-line"><a class="pp" href="/last-fire-privacy/">Privacy policy</a></p>
+        <p class="links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.lastfire"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a class="play yt" href="https://youtu.be/NG46PmNsf64"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Trailer</a></p>
+      </div>
+    </article>
+    <article class="hero">
+      <a class="shot" href="https://play.google.com/store/apps/details?id=com.sixstrokes.rockbreaker" aria-label="Rockbreaker on Google Play"><img src="/img/feature/rockbreaker.png" alt="Rockbreaker" width="1024" height="500" loading="lazy"></a>
+      <div class="hero-body">
+        <div class="hero-head"><img class="avatar" src="/img/rockbreaker.png" alt="" width="56" height="56"><div><h2>Rockbreaker</h2><p class="tag">Tap the rock. Build the fleet. Dig to the core.</p></div></div>
+        <p>Mine a lonely asteroid one tap at a time in monochrome pixel art. Hire astronauts, drones and laser satellites, fight off pirates, catch meteor showers and dig through eight layers of rock.</p>
+        <p class="pp-line"><a class="pp" href="/rockbreaker-privacy/">Privacy policy</a></p>
+        <p class="links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.rockbreaker"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a class="play yt" href="https://youtu.be/jzMEdEEaNYs"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Trailer</a></p>
+      </div>
+    </article>
+    <article class="hero">
+      <a class="shot" href="https://play.google.com/store/apps/details?id=com.sixstrokes.akio" aria-label="Mr. Akio: The Game on Google Play"><img src="/img/feature/mr-akio.png" alt="Mr. Akio: The Game" width="1024" height="500" loading="lazy"></a>
+      <div class="hero-body">
+        <div class="hero-head"><img class="avatar" src="/img/mr-akio.png" alt="" width="56" height="56"><div><h2>Mr. Akio: The Game</h2><p class="tag">Run. Jump. Dodge the drones.</p></div></div>
+        <p>A brave little cat races across a pixel-art city. Jump the sofas and spikes, outsmart attack drones, charging cannons and laser bosses, and collect fish to unlock seven more cats.</p>
+        <p class="pp-line"><a class="pp" href="/mr-akio-privacy/">Privacy policy</a></p>
+        <p class="links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.akio"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a class="play yt" href="https://youtu.be/pkpDen8IPP0"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Trailer</a></p>
+      </div>
+    </article>
+    <article class="hero">
+      <a class="shot" href="https://play.google.com/store/apps/details?id=com.sixstrokes.hotpursuitzero" aria-label="Hot Pursuit Zero on Google Play"><img src="/img/feature/hot-pursuit-zero.png" alt="Hot Pursuit Zero" width="1024" height="500" loading="lazy"></a>
+      <div class="hero-body">
+        <div class="hero-head"><img class="avatar" src="/img/hot-pursuit-zero.png" alt="" width="56" height="56"><div><h2>Hot Pursuit Zero</h2><p class="tag">Outrun them. Or don't.</p></div></div>
+        <p>A pixel-art police chase through farms, deserts and forests. Ram cruisers, fire missiles, lure the cops into trees, and unlock seven cars on the way to five wanted stars.</p>
+        <p class="pp-line"><a class="pp" href="/hot-pursuit-zero-privacy/">Privacy policy</a></p>
+        <p class="links"><a class="play" href="https://play.google.com/store/apps/details?id=com.sixstrokes.hotpursuitzero"><svg viewBox="0 0 20 22" aria-hidden="true" fill="currentColor"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg> Google Play</a><a class="play yt" href="https://youtu.be/FH5e0ZDJmV0"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg> Trailer</a></p>
       </div>
     </article>
   </section>
@@ -208,6 +283,21 @@ footer{margin-top:56px;padding-top:22px;border-top:1.5px solid var(--line);color
     <nav class="social"><a href="https://play.google.com/store/apps/developer?id=Six+Strokes+Studio" aria-label="Google Play" title="All our games on Google Play"><svg viewBox="-6 -5 32 32" fill="currentColor" aria-hidden="true"><path d="M1.4.6a1.6 1.6 0 0 0-.7 1.4v18a1.6 1.6 0 0 0 .7 1.4l.1.1L11.6 11v-.2L1.5.6z"/><path d="M15 14.4 11.7 11v-.2L15 7.4l.1.1 4 2.3c1.1.6 1.1 1.7 0 2.4l-4 2.2z"/><path d="M15.1 14.3 11.7 10.9 1.4 21.4c.4.4 1 .4 1.7 0l12-6.9"/><path d="M15.1 7.5 3.1.6C2.4.2 1.8.2 1.4.6l10.3 10.3z"/></svg></a><a href="https://www.youtube.com/@SixStrokesStudio" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8C5.8 19 12 19 12 19s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8zM10 15V9l5.2 3z"/></svg></a><a href="https://www.tiktok.com/@sixstrokes.studio" aria-label="TikTok" title="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9.1a7.3 7.3 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.2-1.6z"/></svg></a><a href="https://www.instagram.com/sixstrokesstudio/" aria-label="Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.8a3.1 3.1 0 1 1 3.1-3.1 3.1 3.1 0 0 1-3.1 3.1zm6-8a1.1 1.1 0 1 1-1.1-1.1A1.1 1.1 0 0 1 18 7.1zM21.9 8.2a5.4 5.4 0 0 0-1.5-3.8 5.4 5.4 0 0 0-3.8-1.5C15.1 2.8 8.9 2.8 7.4 2.9a5.4 5.4 0 0 0-3.8 1.5 5.4 5.4 0 0 0-1.5 3.8c-.1 1.5-.1 6.1 0 7.6a5.4 5.4 0 0 0 1.5 3.8 5.4 5.4 0 0 0 3.8 1.5c1.5.1 7.7.1 9.2 0a5.4 5.4 0 0 0 3.8-1.5 5.4 5.4 0 0 0 1.5-3.8c.1-1.5.1-6.1 0-7.6zm-2.1 9.4a3.1 3.1 0 0 1-1.7 1.7c-1.2.5-4 .4-5.3.4s-4.2.1-5.3-.4a3.1 3.1 0 0 1-1.7-1.7c-.5-1.2-.4-4-.4-5.3s-.1-4.2.4-5.3a3.1 3.1 0 0 1 1.7-1.7c1.2-.5 4-.4 5.3-.4s4.2-.1 5.3.4a3.1 3.1 0 0 1 1.7 1.7c.5 1.2.4 4 .4 5.3s.1 4.2-.4 5.3z"/></svg></a></nav>
   </footer>
 </div>
+<script>/* Launch emails: the address goes to the studio's Firestore (create only; the owner alone can read it).
+   The document id is a hash of the address, so signing up twice keeps one entry. */
+(function(){var f=document.getElementById('notify');if(!f)return;var msg=document.getElementById('notifyMsg'),inp=f.email,btn=f.querySelector('button');
+function done(t){f.classList.add('done');msg.className='fine ok';msg.textContent=t;}
+try{if(localStorage.getItem('sss-er-notify'))done('You\u2019re on the list. See you at launch!')}catch(e){}
+f.addEventListener('submit',function(e){e.preventDefault();var email=inp.value.trim().toLowerCase();
+if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)||email.length>120){msg.className='fine bad';msg.textContent='Please enter a valid email address.';inp.focus();return}
+btn.disabled=true;btn.textContent='Sending\u2026';
+var r='';try{r=document.referrer?new URL(document.referrer).hostname:''}catch(e){}if(r===location.hostname)r='';
+crypto.subtle.digest('SHA-256',new TextEncoder().encode('exfilrivals:'+email)).then(function(h){
+var id=Array.prototype.map.call(new Uint8Array(h),function(b){return('0'+b.toString(16)).slice(-2)}).join('');
+return fetch('https://firestore.googleapis.com/v1/projects/six-strokes-games/databases/(default)/documents/subscribers?documentId='+id+'&key=AIzaSyCrIDt3inF5X2MwUu4r0uWN3l249s1qnqU',{method:'POST',headers:{'Content-Type':'application/json'},
+body:JSON.stringify({fields:{email:{stringValue:email},game:{stringValue:'exfilrivals'},day:{stringValue:new Date().toISOString().slice(0,10)},ref:{stringValue:r.slice(0,120)}}})})})
+.then(function(res){if(res.ok||res.status===409){try{localStorage.setItem('sss-er-notify','1')}catch(e){}done(res.ok?'You\u2019re on the list. We\u2019ll email you the day Exfil 2088: Rivals is out.':'You\u2019re already on the list. See you at launch!')}else throw 0})
+.catch(function(){btn.disabled=false;btn.textContent='Notify me';msg.className='fine bad';msg.textContent='Something went wrong. Please try again in a minute.'})});})();</script>
 <script>/* Anonymous visit count for the studio's own stats: page path, day and referring site only; no cookies, no IP stored. */
 (function(){try{if(localStorage.getItem('sss-no-track'))return}catch(e){}
 var r='';try{r=document.referrer?new URL(document.referrer).hostname:''}catch(e){}if(r===location.hostname)r='';

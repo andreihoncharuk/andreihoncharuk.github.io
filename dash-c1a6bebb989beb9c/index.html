@@ -117,6 +117,15 @@ td{overflow-wrap:anywhere}
           </div>
         </div>
       </div>
+      <div class="card wide">
+        <h2>Exfil 2088: Rivals · launch emails</h2>
+        <div class="dayrow">
+          <div class="kpis"><div class="kpi"><b id="erSubs">–</b><span>signed up</span></div><div class="kpi"><b id="erSubs7">–</b><span>last 7 days</span></div></div>
+          <button class="ghost" id="erCopy">Copy all emails</button>
+          <span class="note" id="erCopied"></span>
+        </div>
+        <div class="tl" id="erList"></div>
+      </div>
       <div class="card">
         <h2>Minigun · Last Fire</h2>
         <div class="kpis">
@@ -221,6 +230,24 @@ function table(el, rows) {
   el.innerHTML = rows.length ? rows.map(([k, n]) => `<tr><td title="${esc(k)}">${esc(short(k))}</td><td class="n">${n}</td></tr>`).join('') : '<tr><td class="note">No data yet</td></tr>';
 }
 
+// Launch emails left on the home page; newest first. createTime gives the moment of signing up.
+let erEmails = [];
+$('erCopy').onclick = () => navigator.clipboard.writeText(erEmails.join(', ')).then(() => $('erCopied').textContent = `${erEmails.length} copied`);
+async function launchEmails() {
+  const r = await fetch('https://firestore.googleapis.com/v1/projects/six-strokes-games/databases/(default)/documents:runQuery', {
+    method: 'POST', headers: { Authorization: 'Bearer ' + await auth.currentUser.getIdToken(), 'Content-Type': 'application/json' },
+    body: JSON.stringify({ structuredQuery: { from: [{ collectionId: 'subscribers' }] } }) });
+  const rows = await r.json();
+  if (!r.ok) { $('erList').innerHTML = '<p class="note err">Could not load: ' + esc(rows[0]?.error?.message || rows.error?.message || r.statusText) + '</p>'; return; }
+  const subs = rows.filter(x => x.document).map(({ document: d }) => ({ email: d.fields.email?.stringValue || '', ref: d.fields.ref?.stringValue || '', at: new Date(d.createTime) }))
+    .sort((a, b) => b.at - a.at);
+  erEmails = subs.map(s => s.email);
+  $('erSubs').textContent = subs.length;
+  $('erSubs7').textContent = subs.filter(s => Date.now() - s.at < 7 * 864e5).length;
+  $('erList').innerHTML = subs.length ? '<table>' + subs.map(s => `<tr><td class="t">${s.at.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</td>`
+    + `<td>${esc(s.email)}</td><td class="r" title="${esc(s.ref)}">${esc(short(s.ref || 'direct / app'))}</td></tr>`).join('') + '</table>' : '<p class="note">No sign-ups yet</p>';
+}
+
 async function load() {
   $('meta').textContent = 'Loading…';
   try {
@@ -244,6 +271,8 @@ async function load() {
     visitList = list; pick.min = days[0]; pick.max = days[29];
     showDay(shownDay || days[29]);
     table($('refs'), Object.entries(byRef).sort((a, b) => b[1] - a[1]).slice(0, 12));
+
+    await launchEmails();
 
     for (const [g, p] of [['lastfire', 'lf'], ['hotpursuitzero', 'hp']]) {
       const [codes, reds] = await Promise.all([getDocs(collection(db, 'games', g, 'codes')), getDocs(collection(db, 'games', g, 'redemptions'))]);

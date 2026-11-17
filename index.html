@@ -116,13 +116,51 @@ h3{font-size:18px;font-weight:600;margin:0;line-height:1.3}
 .fine.ok{color:var(--me);font-size:15px}
 .fine.bad{color:#ffb86b}
 .notify.done .field{display:none}
-@media(prefers-reduced-motion:reduce){.rain,.soon,.operator{animation:none}}
+.moments{position:relative;z-index:3;padding:0 30px 30px}
+.moments-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 16px;border-top:1.5px solid #2a1f3d;padding-top:22px;margin-bottom:14px}
+.moments-head h3,.match-head{font-family:Silkscreen,monospace;font-weight:400;font-size:20px;letter-spacing:.04em;text-transform:uppercase;color:#f4f1ff;margin:0}
+.moments-head p{font-size:14px;color:var(--dim);margin:0}
+.shots{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.shots li:first-child{grid-column:span 2;grid-row:span 2}
+.shots a{display:block;position:relative;height:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;border:1.5px solid var(--line);background:#000;
+         transition:border-color .2s,box-shadow .2s}
+.shots img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.shots a:hover,.shots a:focus-visible{border-color:#ff4ad7;box-shadow:0 0 24px -6px rgba(255,74,215,.7);outline:none}
+.shots a:hover img,.shots a:focus-visible img{transform:scale(1.05)}
+.cap{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 9px;font-size:13px;font-weight:600;line-height:1.3;color:#f4f1ff;
+     background:linear-gradient(0deg,rgba(5,7,13,.92) 30%,rgba(5,7,13,0))}
+.cap b{display:block;font-family:Silkscreen,monospace;font-weight:400;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#9ff9ff;margin-bottom:2px}
+.shots li:first-child .cap{font-size:16px;padding:40px 16px 13px}
+.shots li:first-child .cap b{font-size:13px}
+.match-head{font-size:15px;margin:24px 0 10px}
+.match{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.match li{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px 11px;font-size:13px;line-height:1.4;color:var(--dim)}
+.match time{display:block;font-family:Silkscreen,monospace;font-size:15px;color:#ffd84a}
+.match b{display:block;font-size:15px;color:var(--ink);margin:1px 0 2px}
+.match li:last-child{border-color:#6b2338;background:linear-gradient(180deg,rgba(255,46,90,.12),rgba(255,46,90,0))}
+.match li:last-child time{color:#ff5a7a}
+.shotbox{width:min(1600px,94vw);max-width:none;max-height:none;padding:0;border:0;background:transparent;color:var(--ink);overflow:visible}
+.shotbox::backdrop{background:rgba(5,7,13,.9)}
+.shotbox figure{margin:0}
+.shotbox img{display:block;width:100%;height:auto;max-height:82vh;object-fit:contain;border-radius:10px;border:1.5px solid #4a2a5c;background:#000}
+.shotbox figcaption{margin-top:10px;font-size:15px;font-weight:600;text-align:center}
+.shotbox figcaption b{font-family:Silkscreen,monospace;font-weight:400;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:#9ff9ff;margin-right:8px}
+.shotbox button{position:absolute;font:inherit;font-size:28px;line-height:1;color:#fff;background:rgba(11,15,25,.85);border:1.5px solid var(--line);border-radius:999px;
+                width:44px;height:44px;cursor:pointer}
+.shotbox button:hover,.shotbox button:focus-visible{border-color:#ff4ad7;color:#ff4ad7;outline:none}
+.sb-x{top:-54px;right:0}.sb-prev{left:10px;top:calc(50% - 40px)}.sb-next{right:10px;top:calc(50% - 40px)}
+@media(prefers-reduced-motion:reduce){.rain,.soon,.operator{animation:none}.shots img{transition:none}}
 @media(max-width:820px){.launch{margin-top:72px}.banner{aspect-ratio:4/3}.banner-text{left:20px;bottom:20px;max-width:62%}
   .logo span{font-size:20px}.logo b{font-size:46px}.operator{right:2%;height:118%}
   .banner::before{background:linear-gradient(90deg,rgba(5,7,13,.9) 0%,rgba(5,7,13,.55) 50%,rgba(5,7,13,0) 75%),linear-gradient(0deg,var(--panel) 0%,rgba(11,15,25,0) 30%)}
-  .launch-body{grid-template-columns:1fr;padding:18px 20px 22px}}
+  .launch-body{grid-template-columns:1fr;padding:18px 20px 22px}
+  .moments{padding:0 20px 22px}.shots{grid-template-columns:1fr 1fr}.shots li:first-child{grid-row:auto}.shots li:last-child{grid-column:span 2}.match{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.launch{margin-top:60px}.banner{aspect-ratio:1/1}.banner-text{max-width:70%}.banner-text .tag{font-size:12px}
-  .logo span{font-size:17px}.logo b{font-size:38px}.operator{right:-4%;height:96%;bottom:18%}.field{flex-direction:column}}
+  .logo span{font-size:17px}.logo b{font-size:38px}.operator{right:-4%;height:96%;bottom:18%}.field{flex-direction:column}
+  .shots{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:0 20px 6px;scroll-padding:0 20px;scrollbar-width:none}
+  .shots::-webkit-scrollbar{display:none}
+  .shots li{flex:0 0 86%;scroll-snap-align:start}.shots li:first-child .cap{font-size:13px;padding:26px 12px 9px}.shots li:first-child .cap b{font-size:11px}
+  .sb-prev,.sb-next{top:auto;bottom:-56px}.sb-prev{left:calc(50% - 54px)}.sb-next{right:calc(50% - 54px)}.shotbox figcaption{margin-top:66px}}
 footer{margin-top:56px;padding-top:22px;border-top:1.5px solid var(--line);color:var(--dim);font-size:14px;
        display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
 @media(max-width:820px){.hero.wide,.hero.wide.flip{flex-direction:column}.hero.wide .shot{flex:none;aspect-ratio:1024/500;min-height:0}.hero.wide .hero-body{padding:18px 20px 20px}.hero.wide h2{font-size:23px}}
@@ -160,6 +198,25 @@ footer{margin-top:56px;padding-top:22px;border-top:1.5px solid var(--line);color
         <p class="fine" id="notifyMsg" role="status">One email at launch. No spam, never shared. <a href="/data-deletion/#launch-emails">Privacy</a></p>
       </form>
     </div>
+    <div class="moments">
+      <div class="moments-head"><h3>From the field</h3><p>Real matches, captured in the game. Tap one to enlarge.</p></div>
+      <ul class="shots">
+        <li><a href="/img/feature/exfil/train.png"><img src="/img/feature/exfil/train-800.jpg" srcset="/img/feature/exfil/train-800.jpg 800w, /img/feature/exfil/train.png 1600w" sizes="(max-width:600px) 86vw, (max-width:820px) 92vw, 660px" alt="An express train smashing through a pack of infected on the metro tracks, an operator a step from the rails" width="800" height="450" loading="lazy"><span class="cap"><b>Metro 6</b>The express ploughs through the pack</span></a></li>
+        <li><a href="/img/feature/exfil/meteors.png"><img src="/img/feature/exfil/meteors-800.jpg" alt="Flaming meteors streaking down onto a parking lot, impact rings on the ground around an operator" width="800" height="450" loading="lazy"><span class="cap"><b>Lot 7</b>Meteors rain on the parking lot</span></a></li>
+        <li><a href="/img/feature/exfil/purge.png"><img src="/img/feature/exfil/purge-800.jpg" alt="The red purge sky over the neon district as a missile strike lands beside an operator" width="800" height="450" loading="lazy"><span class="cap"><b>Neon District</b>The purge: strikes on anyone left</span></a></li>
+        <li><a href="/img/feature/exfil/horde.png"><img src="/img/feature/exfil/horde-800.jpg" alt="An operator holding a street corner under neon windows against a horde and a hulking brute" width="800" height="450" loading="lazy"><span class="cap"><b>Neon District</b>A horde comes for you</span></a></li>
+        <li><a href="/img/feature/exfil/twister.png"><img src="/img/feature/exfil/twister-800.jpg" alt="A twister tearing debris off a neon street as an operator fights through it" width="800" height="450" loading="lazy"><span class="cap"><b>Neon District</b>A twister rips down the street</span></a></li>
+        <li><a href="/img/feature/exfil/mall.png"><img src="/img/feature/exfil/mall-800.jpg" alt="An operator swarmed by the infected in a dark shopping mall, gunfire and blood everywhere" width="800" height="450" loading="lazy"><span class="cap"><b>Dead Mall</b>Swarmed between the shops</span></a></li>
+      </ul>
+      <h4 class="match-head">A match in 4 minutes</h4>
+      <ol class="match">
+        <li><time>0:00</time><b>Drop in</b>Six operators land far apart. Loot fast.</li>
+        <li><time>0:22</time><b>The horde</b>It comes for one of you. Often you.</li>
+        <li><time>1:35</time><b>Evac opens</b>Hold a pad for 4.5 s with nobody else on it.</li>
+        <li><time>3:35</time><b>The purge</b>Missiles fall on everyone still in the city.</li>
+      </ol>
+    </div>
+    <dialog class="shotbox" id="shotbox" aria-label="Screenshot"><button class="sb-x" type="button" aria-label="Close">&times;</button><figure><img src="data:," alt=""><figcaption></figcaption></figure><button class="sb-prev" type="button" aria-label="Previous screenshot">&lsaquo;</button><button class="sb-next" type="button" aria-label="Next screenshot">&rsaquo;</button></dialog>
   </section>
 
   <p class="label">Featured</p>
@@ -298,6 +355,16 @@ return fetch('https://firestore.googleapis.com/v1/projects/six-strokes-games/dat
 body:JSON.stringify({fields:{email:{stringValue:email},game:{stringValue:'exfilrivals'},day:{stringValue:new Date().toISOString().slice(0,10)},ref:{stringValue:r.slice(0,120)}}})})})
 .then(function(res){if(res.ok||res.status===409){try{localStorage.setItem('sss-er-notify','1')}catch(e){}done(res.ok?'You\u2019re on the list. We\u2019ll email you the day Exfil 2088: Rivals is out.':'You\u2019re already on the list. See you at launch!')}else throw 0})
 .catch(function(){btn.disabled=false;btn.textContent='Notify me';msg.className='fine bad';msg.textContent='Something went wrong. Please try again in a minute.'})});})();</script>
+<script>/* Exfil screenshots: open full size in a dialog, step with the arrows (keys or buttons). Without <dialog> the links just open the image. */
+(function(){var box=document.getElementById('shotbox');if(!box||!box.showModal)return;
+var links=Array.prototype.slice.call(document.querySelectorAll('.shots a')),img=box.querySelector('img'),cap=box.querySelector('figcaption'),at=0;
+function show(i){at=(i+links.length)%links.length;var a=links[at];img.src=a.getAttribute('href');img.alt=a.querySelector('img').alt;cap.innerHTML=a.querySelector('.cap').innerHTML}
+links.forEach(function(a,i){a.addEventListener('click',function(e){e.preventDefault();show(i);box.showModal()})});
+box.querySelector('.sb-x').addEventListener('click',function(){box.close()});
+box.querySelector('.sb-prev').addEventListener('click',function(){show(at-1)});
+box.querySelector('.sb-next').addEventListener('click',function(){show(at+1)});
+box.addEventListener('click',function(e){if(e.target===box)box.close()});
+box.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')show(at-1);else if(e.key==='ArrowRight')show(at+1)});})();</script>
 <script>/* Anonymous visit count for the studio's own stats: page path, day and referring site only; no cookies, no IP stored. */
 (function(){try{if(localStorage.getItem('sss-no-track'))return}catch(e){}
 var r='';try{r=document.referrer?new URL(document.referrer).hostname:''}catch(e){}if(r===location.hostname)r='';

@@ -139,6 +139,8 @@ h3{font-size:18px;font-weight:600;margin:0;line-height:1.3}
 .match b{display:block;font-size:15px;color:var(--ink);margin:1px 0 2px}
 .match li:last-child{border-color:#6b2338;background:linear-gradient(180deg,rgba(255,46,90,.12),rgba(255,46,90,0))}
 .match li:last-child time{color:#ff5a7a}
+.modes{grid-template-columns:repeat(3,1fr)}
+.modes li:last-child{border-color:var(--line);background:none}.modes li:last-child time{color:#ffd84a}
 .shotbox{width:min(1600px,94vw);max-width:none;max-height:none;padding:0;border:0;background:transparent;color:var(--ink);overflow:visible}
 .shotbox::backdrop{background:rgba(5,7,13,.9)}
 .shotbox figure{margin:0}
@@ -154,7 +156,7 @@ h3{font-size:18px;font-weight:600;margin:0;line-height:1.3}
   .logo span{font-size:20px}.logo b{font-size:46px}.operator{right:2%;height:118%}
   .banner::before{background:linear-gradient(90deg,rgba(5,7,13,.9) 0%,rgba(5,7,13,.55) 50%,rgba(5,7,13,0) 75%),linear-gradient(0deg,var(--panel) 0%,rgba(11,15,25,0) 30%)}
   .launch-body{grid-template-columns:1fr;padding:18px 20px 22px}
-  .moments{padding:0 20px 22px}.shots{grid-template-columns:1fr 1fr}.shots li:first-child{grid-row:auto}.shots li:last-child{grid-column:span 2}.match{grid-template-columns:1fr 1fr}}
+  .moments{padding:0 20px 22px}.shots{grid-template-columns:1fr 1fr}.shots li:first-child{grid-row:auto}.shots li:last-child{grid-column:span 2}.match{grid-template-columns:1fr 1fr}.modes{grid-template-columns:1fr}}
 @media(max-width:600px){.launch{margin-top:60px}.banner{aspect-ratio:1/1}.banner-text{max-width:70%}.banner-text .tag{font-size:12px}
   .logo span{font-size:17px}.logo b{font-size:38px}.operator{right:-4%;height:96%;bottom:18%}.field{flex-direction:column}
   .shots{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:0 20px 6px;scroll-padding:0 20px;scrollbar-width:none}
@@ -187,8 +189,8 @@ footer{margin-top:56px;padding-top:22px;border-top:1.5px solid var(--line);color
     <div class="launch-body">
       <div class="launch-about">
         <div class="hero-head"><img class="avatar pixel" src="/img/exfil-rivals.png" alt="" width="56" height="56"><div><h3>Exfil 2088: Rivals</h3><p class="tag">Loot. Fight. Get out alive.</p></div></div>
-        <p>An online extraction shooter in a rain-soaked neon city. Six operators drop in among the infected: crack safes and weapon cases, take a rival&rsquo;s whole bag, and when the evac flyers arrive, hold the pad for 4.5 seconds while nobody else is on it. Miss the flight and the purge finds you.</p>
-        <ul class="facts"><li>6 players online</li><li>4-minute matches</li><li>8 maps</li><li>22 weapons</li><li>36 kinds of infected</li><li>8 super abilities</li><li>12 perks</li><li>4 starter kits</li><li>11,880 operator looks</li><li>14 languages</li><li>Free on Android</li><li>Free on iOS</li></ul>
+        <p>An online extraction shooter in a rain-soaked neon city. Six operators drop in among the infected: crack safes and weapon cases, take a rival&rsquo;s whole bag, and when the evac flyers arrive, hold the pad for 4.5 seconds while nobody else is on it. Miss the flight and the purge finds you. Go solo or in squads of two, or play Last One Out, where there&rsquo;s no flight at all.</p>
+        <ul class="facts"><li>6 players online</li><li>Solo or squads of 2</li><li>4-minute matches</li><li>2 game modes</li><li>8 maps</li><li>22 weapons</li><li>23 gadgets &amp; throwables</li><li>36 kinds of infected</li><li>14 city events</li><li>8 super abilities</li><li>12 perks</li><li>4 starter kits</li><li>48 titles</li><li>186,368 operator looks</li><li>14 languages</li><li>Free on Android</li><li>Free on iOS</li></ul>
         <p class="links"><a class="play yt" href="https://www.tiktok.com/@exfil.2088.rivals"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9.1a7.3 7.3 0 0 0 4.3 1.4V7.4a4.3 4.3 0 0 1-3.2-1.6z"/></svg> TikTok</a><a class="play yt" href="https://www.instagram.com/exfil.2088.rivals/"><svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 7.3A4.7 4.7 0 1 0 16.7 12 4.7 4.7 0 0 0 12 7.3zm0 7.8a3.1 3.1 0 1 1 3.1-3.1 3.1 3.1 0 0 1-3.1 3.1zm6-8a1.1 1.1 0 1 1-1.1-1.1A1.1 1.1 0 0 1 18 7.1zM21.9 8.2a5.4 5.4 0 0 0-1.5-3.8 5.4 5.4 0 0 0-3.8-1.5C15.1 2.8 8.9 2.8 7.4 2.9a5.4 5.4 0 0 0-3.8 1.5 5.4 5.4 0 0 0-1.5 3.8c-.1 1.5-.1 6.1 0 7.6a5.4 5.4 0 0 0 1.5 3.8 5.4 5.4 0 0 0 3.8 1.5c1.5.1 7.7.1 9.2 0a5.4 5.4 0 0 0 3.8-1.5 5.4 5.4 0 0 0 1.5-3.8c.1-1.5.1-6.1 0-7.6zm-2.1 9.4a3.1 3.1 0 0 1-1.7 1.7c-1.2.5-4 .4-5.3.4s-4.2.1-5.3-.4a3.1 3.1 0 0 1-1.7-1.7c-.5-1.2-.4-4-.4-5.3s-.1-4.2.4-5.3a3.1 3.1 0 0 1 1.7-1.7c1.2-.5 4-.4 5.3-.4s4.2-.1 5.3.4a3.1 3.1 0 0 1 1.7 1.7c.5 1.2.4 4 .4 5.3s.1 4.2-.4 5.3z"/></svg> Instagram</a></p>
       </div>
       <form class="notify" id="notify" novalidate>
@@ -215,6 +217,12 @@ footer{margin-top:56px;padding-top:22px;border-top:1.5px solid var(--line);color
         <li><time>1:35</time><b>Evac opens</b>Hold a pad for 4.5 s with nobody else on it.</li>
         <li><time>3:35</time><b>The purge</b>Missiles fall on everyone still in the city.</li>
       </ol>
+      <h4 class="match-head">Ways to play</h4>
+      <ul class="match modes">
+        <li><time>4:00</time><b>Extraction</b>Loot, hold a pad and get on a flyer before the purge.</li>
+        <li><time>13:00</time><b>Last One Out</b>No flyers. The last operator, or squad, still alive wins.</li>
+        <li><time>3 x 2</time><b>Squads</b>Three teams of two, no friendly fire. Or go it alone.</li>
+      </ul>
     </div>
     <dialog class="shotbox" id="shotbox" aria-label="Screenshot"><button class="sb-x" type="button" aria-label="Close">&times;</button><figure><img src="data:," alt=""><figcaption></figcaption></figure><button class="sb-prev" type="button" aria-label="Previous screenshot">&lsaquo;</button><button class="sb-next" type="button" aria-label="Next screenshot">&rsaquo;</button></dialog>
   </section>
